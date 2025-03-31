@@ -26,6 +26,7 @@ export async function handler(req: NextApiRequest, res: NextApiResponse) {
       description: formState.description,
       code: formState.code,
       language: formState.language,
+      type: formState.type
     });
 
     // Guardamos el documento

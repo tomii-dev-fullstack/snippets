@@ -6,11 +6,12 @@ import TextArea from "./textarea";
 import Select from "./select";
 import ButtonComponent from "./button";
 import InputEditor from "./editor";
+import { inter, poppins } from "@/lib/fonts";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (title: string, description: string, code: string, language: string) => void;
+  onSave: (title: string, description: string, code: string, language: string, type: string) => void;
 }
 
 const ModalComponent: FC<ModalProps> = ({ isOpen, onClose, onSave }) => {
@@ -19,6 +20,7 @@ const ModalComponent: FC<ModalProps> = ({ isOpen, onClose, onSave }) => {
     description: "",
     code: "// Escribe tu código aquí...",
     language: "javascript",
+    type: "file"
   });
 
   if (!isOpen) return null;
@@ -30,7 +32,7 @@ const ModalComponent: FC<ModalProps> = ({ isOpen, onClose, onSave }) => {
   const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent the default form submission behavior
 
-    onSave(formState.title, formState.description, formState.code, formState.language);
+    onSave(formState.title, formState.description, formState.code, formState.language, formState.type);
 
     try {
       // Realiza la solicitud POST a la API de Next.js
@@ -51,6 +53,9 @@ const ModalComponent: FC<ModalProps> = ({ isOpen, onClose, onSave }) => {
       console.log("Hubo un error al subir el código.");
       console.error(error);
     }
+    finally {
+      window.location.reload()
+    }
   };
 
   /*   onClose(); */
@@ -59,11 +64,30 @@ const ModalComponent: FC<ModalProps> = ({ isOpen, onClose, onSave }) => {
   return (
     <div className="fixed inset-0 flex justify-center items-center backdrop-blur-xs bg-opacity-50 p-4">
       <div className="bg-white p-6 rounded-sm shadow-lg max-w-lg w-full">
-        <h2 className="text-2xl font-semibold mb-10">Agregar código</h2>
+        <h2 className={`text-2xl font-semibold mb-10 ${inter.className}`}>Agregar snippet</h2>
         <form onSubmit={handleSave}>
           <Input title={formState.title} onChange={(value) => handleChange("title", value)} />
           <TextArea description={formState.description} onChange={(value) => handleChange("description", value)} />
-          <Select language={formState.language} onChange={(value) => handleChange("language", value)} />
+          <Select
+            value={formState.language}
+            onChange={(value) => handleChange("language", value)}
+            options={[
+              { label: "JavaScript", value: "javascript" },
+              { label: "TypeScript", value: "typescript" },
+              { label: "Python", value: "python" },
+              { label: "CSS", value: "css" },
+              { label: "HTML", value: "html" }
+            ]}
+          />
+          <h2 className={`text-sm font-medium mb-3 ${poppins.className}`}>Tipo de snippet</h2>
+          <Select
+            value={formState.type}
+            onChange={(value) => handleChange("type", value)}
+            options={[
+              { label: "Componente", value: "component" },
+              { label: "Archivo completo", value: "file" }
+            ]}
+          />
           <div className="border rounded-lg overflow-hidden mb-3">
             <InputEditor snippet={formState} onChange={(value) => handleChange("code", value || "")} />
           </div>

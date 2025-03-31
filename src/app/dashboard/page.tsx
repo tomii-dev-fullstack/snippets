@@ -11,18 +11,10 @@ interface Snippet {
     title: string;
     description: string;
     language: string;
+    type: "file" | "component"
 }
 
-interface Language {
-    name: string;
-    color: string;
-}
 
-const languages: Language[] = [
-    { name: "JavaScript", color: "bg-yellow-500" },
-    { name: "TypeScript", color: "bg-blue-500" },
-    { name: "Python", color: "bg-purple-500" }
-];
 
 export default function HomePage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -55,29 +47,24 @@ export default function HomePage() {
     // Si hay un error, muestra el mensaje de error
     if (error) return <p>{error}</p>;
 
-    // Si no hay datos, muestra un mensaje
-    if (!data || data.length === 0) {
-        return <p>No hay datos disponibles</p>;
-    }
-
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
     const onSave = () => { };
-
+    console.log(data)
     return (
-        <div className="container max-w-7xl mx-auto p-6 min-h-screen">
+        <div className="container max-w-7xl mx-auto  min-h-screen">
             {/* Fila con el botón de "+" alineado a la derecha */}
             <div className="flex justify-between items-center mb-10">
-                <h1 className={`${inter.className} text-4xl font-bold text-gray-800`}>
+                <h1 className={`${inter.className} text-lg sm:text-4xl font-bold text-gray-800`}>
                     Tus snippets
                 </h1>
 
                 <div className="flex justify-end gap-2 items-center">
                     <button
                         onClick={openModal}
-                        className="w-auto py-2 px-5 rounded-full cursor-pointer bg-gray-900 text-white flex items-center justify-center"
+                        className="text-xs sm:text-lg w-auto py-2 px-5 rounded-full cursor-pointer bg-gray-900 text-white flex items-center justify-center"
                     >
-                        Crear
+                        Crear snippet
                         <span className="ml-2">
                             <i className="fa-solid fa-add"></i>
                         </span>
@@ -90,40 +77,26 @@ export default function HomePage() {
 
             {/* Renderizar datos si están disponibles */}
             {data.length > 0 ? (
-                <table className="min-w-full rounded-lg  bg-gray-50">
-                    <tbody>
-                        {data.map((d, i) => (
-                            <tr key={i} className="hover:bg-gray-100">
-                                <td className="px-6 py-4 text-sm text-gray-800">
-                                    <Link
-                                        href={`/snippets/${d._id}`} // Cambié `post.id` a `d.title` para un enlace con el título
-                                        className={`${roboto.className} text-lg text-gray-800 hover:text-blue-800 `}
-                                    >
-                                        {d.title}
-                                    </Link>
-                                  
-                                </td>
-                              {/*   <td className="px-6 py-4 text-sm text-gray-800">{d.language}</td> */}
-                                <td className="px-6 py-4 text-sm text-gray-800">
-                                    {languages
-                                        .map((language, index) => (
-                                            <span
-                                                key={index}
-                                                className={`inline-block ${language.color} text-gray-700 bg-gray-100 text-xs px-2 py-1 rounded-full mr-2`}
-                                            >
-                                                {language.name}
-                                            </span>
-                                        ))}
-                                </td>
-                                <td className="px-6 py-4 text-sm text-gray-800">
-                                    <span className="bg-gray-200 rounded-full w-8 h-8 flex justify-center items-center cursor-pointer">
-                                        <i className="fa-solid fa-trash text-sm"></i>
-                                    </span>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <ul className="rounded-sm border border-gray-300 bg-gray-50">
+                    {data.map((d) => (
+                        <li key={d._id} className="flex justify-between p-4 hover:bg-gray-100">
+                            <div className="text-gray-800">
+                                <Link
+                                    href={`/snippets/${d._id}`}
+                                    className={`text-sm sm:text-lg text-gray-800 hover:text-blue-800 ${poppins.className}`}
+                                >
+                                    {d.title}
+                                </Link>
+                                <span className={`ml-5 rounded-full px-2 text-sm text-gray-800 bg-gray-200 border border-gray-400 ${roboto.className}`}>
+                                    {d.type === "file" ? "Archivo" : "Componente"}
+                                </span>
+                            </div>
+                            <button className="bg-gray-200 rounded-full w-8 h-8 flex justify-center items-center cursor-pointer">
+                                <i className="fa-solid fa-trash text-xs"></i>
+                            </button>
+                        </li>
+                    ))}
+                </ul>
             ) : (
                 <div className="text-center text-gray-600 mt-4">Cargando datos...</div>
             )}

@@ -1,25 +1,24 @@
 import { FC } from "react";
 
 interface SelectProps {
-    language: string;
+    value: string;
     onChange: (value: string) => void;
+    options: { label: string; value: string }[];
 }
 
-const Select: FC<SelectProps> = ({ language, onChange }) => {
+const Select: FC<SelectProps> = ({ value, onChange, options }) => {
     return (
-
         <select
-            value={language}
-            onChange={(value:any) => onChange(value.target.value)}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
             className="w-full p-2 border rounded mb-3"
         >
-            <option value="javascript">JavaScript</option>
-            <option value="typescript">TypeScript</option>
-            <option value="python">Python</option>
-            <option value="css">CSS</option>
-            <option value="html">HTML</option>
+            {options.map((option) => (
+                <option key={option.value} value={option.value}>
+                    {option.label}
+                </option>
+            ))}
         </select>
-
     );
 };
 

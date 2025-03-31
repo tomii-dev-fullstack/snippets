@@ -15,16 +15,7 @@ interface Snippet {
   language: string
 }
 
-interface Language {
-  name: string;
-  color: string;
-}
 
-const languages: Language[] = [
-  { name: "JavaScript", color: "bg-yellow-500" },
-  { name: "TypeScript", color: "bg-blue-500" },
-  { name: "Python", color: "bg-green-500" }
-];
 export default function CodeEditor() {
   const [formState, setFormState] = useState({
     title: "",
@@ -81,7 +72,7 @@ export default function CodeEditor() {
 
 
   return (
-    <div className="container max-w-7xl mt-10  mx-auto p-6 justify-center items-center min-h-screen">
+    <div className="container max-w-7xl mt-10  mx-auto px-5 sm:px-0 justify-center items-center min-h-screen">
       <div className="mb-10 flex items-center gap-3">
         <Link href={"/"} className="px-4 py-2 bg-transparent border border-gray-400 text-sm text-lg  rounded-lg hover:bg-gray-400 flex items-center">
           <i className="fa-solid fa-arrow-left"></i>
@@ -93,20 +84,7 @@ export default function CodeEditor() {
       <div className="flex flex-col justify-start sm:mb-5">
         <h2 className={`${inter.className} text-left flex-1 text-sm text-black font-bold sm:text-xl`}>{data.title}</h2>
         <p className={`${poppins.className} text-left flex-1 text-sm sm:text-lg min-h-32`}>{data.description}</p>
-
-        <div className="flex flex-wrap gap-3  sm:mt-0 mb-5 sm:mb-0 justify-end md:justify-end items-center">
-          {languages.map((lang, index) => (
-            <div key={index} className="flex items-center">
-              <span className={`w-2 h-2 rounded-full ${lang.color} inline-block`}></span> {/* El punto */}
-              <span className={`${poppins.className} text-xs sm:text-lg ml-2`}>{lang.name}</span> {/* El nombre del lenguaje */}
-            </div>
-          ))}
-        </div>
       </div>
-
-
-
-
       <InputEditor snippet={data} onChange={(value) => handleChange("code", value || "")} />
 
     </div >

@@ -7,6 +7,7 @@ interface ICode extends Document {
   description: string;
   code: string;
   language: string;
+  type:string
 }
 
 const codeSchema = new Schema<ICode>({
@@ -14,6 +15,7 @@ const codeSchema = new Schema<ICode>({
   description: { type: String, required: true },
   code: { type: String, required: true },
   language: { type: String, required: true },
+  type: { type: String, required: true },
 });
 
 const Code = mongoose.models.Code || mongoose.model<ICode>('Code', codeSchema);
