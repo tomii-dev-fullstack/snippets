@@ -1,26 +1,29 @@
-import mongoose, { ConnectOptions } from 'mongoose';
+import mongoose, { ConnectOptions } from "mongoose";
 
-const uri: string = "mongodb+srv://files:db_files@cluster0.wwpoqjz.mongodb.net/files?retryWrites=true&w=majority&appName=Cluster0";
+const uri = process.env.MONGO_URI as string;
+
+if (!uri) {
+  throw new Error("❌ La variable de entorno MONGO_URI no está definida");
+}
 
 // Opciones de conexión para mongoose
 const clientOptions: ConnectOptions = {
-  serverApi: { version: '1', strict: true, deprecationErrors: true }
+  serverApi: { version: "1", strict: true, deprecationErrors: true },
 };
 
-// Esta función devuelve la conexión de mongoose
+// Función para conectar a MongoDB
 export async function run() {
   try {
     const connection = await mongoose.connect(uri, clientOptions);
 
-    // Verificamos si la conexión está lista
     if (connection.connection.readyState !== 1) {
-      throw new Error('No se pudo conectar a la base de datos');
+      throw new Error("❌ No se pudo conectar a la base de datos");
     }
 
-    console.log("Conexión exitosa con MongoDB");
-    return connection; // Devolvemos la conexión
+    console.log("✅ Conexión exitosa con MongoDB");
+    return connection;
   } catch (error) {
-    console.error("Error al conectar con MongoDB:", error);
-    throw error; // Propagamos el error
+    console.error("❌ Error al conectar con MongoDB:", error);
+    throw error;
   }
 }
